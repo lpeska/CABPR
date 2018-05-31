@@ -13,25 +13,24 @@ import itertools
 
 from functions import *
 
-class BPR_MCA_sq(object):
+class CABPR(object):
 
     def __init__(self,args):
-        self.alg_type = "TFL"
-        self.batchSize = 128
+        self.alg_type = args["alg_type"]
+        self.batchSize = args["batch_size"]
         self.D = args["D"]
         self.orig_learning_rate = args["learning_rate"]
         self.learning_rate = self.orig_learning_rate
 
         self.max_iters = args["max_iters"]
         self.global_regularization = args["global_regularization"]        
-        self.bias_regularization = args["global_regularization"] * args["bias_regularization"]
         self.ca_regularization = args["ca_regularization"]
         self.ca_lambda = args["ca_lambda"]
         self.shape = args["shape"]
         self.fraction = args["fraction"]     
-        self.learn_sim_weights = args["learn_sim_weights"]  
+        self.learn_sim_weights = True 
         
-        self.simple_predict = args["simple_predict"]
+        self.simple_predict = True
         
         self.sim_matrix_names = args["sim_names"]
         self.neg_item_learning_rate = 0.1
@@ -892,18 +891,17 @@ if __name__ == "__main__":
     args = {
         "D": 20,
         "learning_rate": 0.1,
-        "max_iters":6,
+        "max_iters":31,
+        "batch_size":32,
         "global_regularization": 0.01,
-        "bias_regularization": 1,
         "ca_lambda": 0.01,
         "ca_regularization": 0.05,
-        "simple_predict": True,
-        "learn_sim_weights": True,
         "sim_names": ["sim_userML1M", "sim_userUSPost", "sim_itemML1M", "sim_itemIMDB", "sim_itemDBT"],
         "user_indicator": [True, True, False, False, False],
         "init_lambda": [0.2, 0.2, 0.2, 0.2, 0.2]
 
     }
+    fractionList = [0.98,0.95,0.90]
 
     # run CABPR on LOD-RecSys
     """
@@ -911,16 +909,15 @@ if __name__ == "__main__":
         "D": 20,
         "learning_rate": 0.1,
         "max_iters":31,
+        "batch_size":32,
         "global_regularization": 0.05,
-        "bias_regularization": 1,
         "ca_lambda": 0.05,
         "ca_regularization": 0.05,
-        "simple_predict": True,
-        "learn_sim_weights": True,
-        "sim_names": ["sim_Authors",  "sim_Books",  "sim_BroadCats",  "sim_Cats",  "sim_GenSim"],#[ ],#
+        "sim_names": ["sim_Authors",  "sim_Books",  "sim_BroadCats",  "sim_Cats",  "sim_GenSim"],
         "user_indicator": [False, False, False, False, False],
         "init_lambda": [0.2, 0.2, 0.2, 0.2, 0.2]
     }
+    fractionList = [0.90,0.75,0.50]
     """
 
     #load ML1M interaction data
@@ -931,12 +928,7 @@ if __name__ == "__main__":
     sm = coo_mat.tocsr()
     sma = sm.toarray()
 
-
-
-
-
-
-    fractionList = [0.98,0.95,0.90]
+   
     seedlist = [35, 2085, 1737, 8854, 124]
     for fraction in fractionList:
         args["shape"] = sma.shape
@@ -946,7 +938,7 @@ if __name__ == "__main__":
                 W, test_data, test_label = cross_validation(sma, seed, 1, 0, fraction)  #
 
 
-                model = BPR_MCA_sq(args)
+                model = CABPR(args)
                 print(model.alg_type)
                 print(fraction)
                 print(seed)
