@@ -21,11 +21,10 @@ class CABPR(object):
         self.D = args["D"]
         self.orig_learning_rate = args["learning_rate"]
         self.learning_rate = self.orig_learning_rate
-
         self.max_iters = args["max_iters"]
-        self.global_regularization = args["global_regularization"]        
-        self.ca_regularization = args["ca_regularization"]
-        self.ca_lambda = args["ca_lambda"]
+        self.global_regularization = 0.05
+        self.ca_regularization = 0.05
+        self.ca_lambda = 0.05
         self.shape = args["shape"]
         self.fraction = args["fraction"]     
         self.learn_sim_weights = True 
@@ -886,16 +885,15 @@ if __name__ == "__main__":
     import pandas as pd
     
 
-    #run CABPR on ML1M
+    #run CABPR on ML1M; parameters of the best resulting method out of the evaluated ones
 
     args = {
+        "alg_type": "TFLNN",
         "D": 20,
         "learning_rate": 0.1,
         "max_iters":31,
         "batch_size":32,
-        "global_regularization": 0.01,
-        "ca_lambda": 0.01,
-        "ca_regularization": 0.05,
+
         "sim_names": ["sim_userML1M", "sim_userUSPost", "sim_itemML1M", "sim_itemIMDB", "sim_itemDBT"],
         "user_indicator": [True, True, False, False, False],
         "init_lambda": [0.2, 0.2, 0.2, 0.2, 0.2]
@@ -903,16 +901,15 @@ if __name__ == "__main__":
     }
     fractionList = [0.98,0.95,0.90]
 
-    # run CABPR on LOD-RecSys
+    # run CABPR on LOD-RecSys; parameters of the best resulting method out of the evaluated ones
     """
     args = {
+        "alg_type" : "TFLNN",
         "D": 20,
         "learning_rate": 0.1,
         "max_iters":31,
         "batch_size":32,
-        "global_regularization": 0.05,
-        "ca_lambda": 0.05,
-        "ca_regularization": 0.05,
+
         "sim_names": ["sim_Authors",  "sim_Books",  "sim_BroadCats",  "sim_Cats",  "sim_GenSim"],
         "user_indicator": [False, False, False, False, False],
         "init_lambda": [0.2, 0.2, 0.2, 0.2, 0.2]
