@@ -1,10 +1,10 @@
 """
-Bayesian Personalized Ranking with Multiple Content Alignments
+Content-adjusted Bayesian Personalized Ranking Matrix Factorization
 
 Original Implementation of BPR obtained from https://github.com/gamboviol/bpr
 Some IO operations and CV brought from PyDTI component, https://github.com/stephenliu0423/PyDTI
 
-Extended with Multiple Content Alignments by Ladislav Peska, peska@ksi.mff.cuni.cz
+Extensions of BPR-OPT with arbitrary many Content Alignments by Ladislav Peska, peska@ksi.mff.cuni.cz
 """
 from __future__ import division
 import tensorflow as tf
